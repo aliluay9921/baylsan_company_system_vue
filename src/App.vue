@@ -1,32 +1,55 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app>
+    <!-- <v-app-bar app color="primary" v-if="!$route.path.includes('login')" dark>
+      <v-spacer></v-spacer>
+    </v-app-bar> -->
+
+    <v-main>
+      <v-snackbar v-model="snackbar" shaped :multi-line="true">
+        <div v-for="(text, index) in textSnackbar.split('\n')" :key="index">
+          {{ index == 0 ? "" : index + "-" }} {{ text }}
+        </div>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+            أغلاق
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+export default {
+  name: "App",
+
+  data: () => ({
+    //
+  }),
+  computed: {
+    snackbar: {
+      set: function () {
+        this.$store.dispatch("snackbarToggle", { toggle: false });
+      },
+      get: function () {
+        return this.$store.state.snackbar;
+      },
+    },
+    textSnackbar: function () {
+      return this.$store.state.textSnackbar;
+    },
+  },
+};
+</script>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Cairo&display=swap");
+* {
+  font-family: Cairo;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  background-color: #f5fefe;
+  /* background-color: #fff; */
 }
 </style>
