@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <v-row>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="4">
         <v-card elevation="8" outlined shaped to="/employees">
           <v-card-title class="text-h5">
             <div class="icon">
@@ -9,12 +9,12 @@
             </div>
           </v-card-title>
           <v-card-text class="mt-5 text-h4 dark--text text-center"
-            ><b>الموضفين</b>
+            ><b>الموظفين</b>
           </v-card-text>
           <v-card-actions> </v-card-actions
         ></v-card>
       </v-col>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="4">
         <v-card elevation="8" outlined shaped to="/workers">
           <v-card-title class="text-h5">
             <div class="icon">
@@ -27,9 +27,22 @@
           <v-card-actions> </v-card-actions
         ></v-card>
       </v-col>
+      <v-col cols="12" sm="4">
+        <v-card elevation="8" outlined shaped to="/guarantees">
+          <v-card-title class="text-h5">
+            <div class="icon">
+              <i class="fa fa-address-card" aria-hidden="true"></i>
+            </div>
+          </v-card-title>
+          <v-card-text class="mt-5 text-h4 dark--text text-center"
+            ><b>الكفالات</b>
+          </v-card-text>
+          <v-card-actions> </v-card-actions
+        ></v-card>
+      </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="4">
         <v-card elevation="8" outlined shaped to="/logs">
           <v-card-title class="text-h5">
             <div class="icon">
@@ -42,7 +55,7 @@
           <v-card-actions> </v-card-actions
         ></v-card>
       </v-col>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="4">
         <v-card elevation="8" outlined shaped to="/importSystem">
           <v-card-title class="text-h5">
             <div class="icon">
@@ -51,6 +64,20 @@
           </v-card-title>
           <v-card-text class="mt-5 text-h4 dark--text text-center"
             ><b>المبيعات</b>
+          </v-card-text>
+          <v-card-actions> </v-card-actions
+        ></v-card>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <!-- <v-card elevation="8" outlined shaped to="/statistics"> -->
+        <v-card elevation="8" outlined shaped to="">
+          <v-card-title class="text-h5">
+            <div class="icon">
+              <i class="fa fa-percent" aria-hidden="true"></i>
+            </div>
+          </v-card-title>
+          <v-card-text class="mt-5 text-h4 dark--text text-center"
+            ><b>أحصائيات</b>
           </v-card-text>
           <v-card-actions> </v-card-actions
         ></v-card>

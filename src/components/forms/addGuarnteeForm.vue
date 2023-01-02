@@ -3,7 +3,7 @@
     <v-form ref="form" class="mr-10">
       <v-col cols="12" md="12" lg="12">
         <v-row>
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="4">
             <v-text-field
               v-model="selected_object.customer_name"
               placeholder="اسم ألزبون"
@@ -13,48 +13,7 @@
               clearable
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="4">
-            <v-text-field
-              v-model="selected_object.note"
-              placeholder="أضف ملاحضة"
-              label="أضف ملاحضة"
-              hide-details="auto"
-              clearable
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="2">
-            <v-text-field
-              v-model="selected_object.price"
-              placeholder="أدخل السعر الكلي "
-              label="أدخل السعر الكلي "
-              hide-details="auto"
-              :rules="[rules.required]"
-              clearable
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="3">
-            <v-text-field
-              v-model="selected_object.remainder_price"
-              placeholder="أدخل القيمة المستلم"
-              label="أدخل القيمة المستلم"
-              hide-details="auto"
-              :rules="[rules.required]"
-              clearable
-            ></v-text-field>
-          </v-col>
-        </v-row>
 
-        <v-row>
-          <v-col cols="12" sm="4">
-            <v-text-field
-              v-model="selected_object.received_price"
-              placeholder="أدخل القيمة المتبقية"
-              label="أدخل القيمة المتبقية"
-              hide-details="auto"
-              :rules="[rules.required]"
-              clearable
-            ></v-text-field>
-          </v-col>
           <v-col cols="12" sm="4">
             <v-autocomplete
               clearable
@@ -66,14 +25,35 @@
             ></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4">
-            <v-autocomplete
+            <v-text-field
+              v-model="selected_object.note"
+              placeholder="أضف ملاحضة"
+              label="أضف ملاحضة"
+              hide-details="auto"
               clearable
-              :items="request_type"
-              v-model="selected_object.request_type"
-              item-text="text"
-              item-value="value"
-              label=" اختر نوع الطلب"
-            ></v-autocomplete>
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="4">
+            <v-text-field
+              v-model="selected_object.finger_print_intelligence"
+              placeholder="بصمة مخابرات"
+              label="بصمة مخابرات"
+              hide-details="auto"
+              :rules="[rules.required]"
+              clearable
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4">
+            <v-text-field
+              v-model="selected_object.book_work"
+              placeholder="دفتر العمل"
+              label="دفتر العمل"
+              hide-details="auto"
+              :rules="[rules.required]"
+              clearable
+            ></v-text-field>
           </v-col>
         </v-row>
 
@@ -99,18 +79,10 @@
 export default {
   data() {
     return {
-      menu: null,
-      menu1: null,
       rules: {
         required: (value) => !!value || "هذا الحقل مطلوب.",
         // min: (v) => v.length >= 6 || "يجب ان تكون كلمة المرور اكثر من 6 عناصر",
       },
-      request_type: [
-        { text: "يومي", value: 0 },
-        { text: "أسبوعي", value: 1 },
-        { text: "شهري", value: 2 },
-        { text: "سنوي", value: 3 },
-      ],
     };
   },
   computed: {
@@ -118,10 +90,10 @@ export default {
       return this.$store.state.worker.workers;
     },
     selected_object() {
-      return this.$store.state.importSystem.selected_object;
+      return this.$store.state.guarntee.selected_object;
     },
     isEdit() {
-      return this.$store.state.importSystem.isEdit;
+      return this.$store.state.guarntee.isEdit;
     },
   },
   methods: {
@@ -133,15 +105,15 @@ export default {
         let data = {};
         data["customer_name"] = this.selected_object.customer_name;
         data["worker_id"] = this.selected_object.worker_id;
-        data["request_type"] = this.selected_object.request_type;
-        data["price"] = this.selected_object.price;
-        data["remainder_price"] = this.selected_object.remainder_price;
-        data["received_price"] = this.selected_object.received_price;
+        data["finger_print_intelligence"] =
+          this.selected_object.finger_print_intelligence;
+
+        data["book_work"] = this.selected_object.book_work;
         data["note"] = this.selected_object.note;
         // console.log(data);
         // return;
         if (this.isEdit) {
-          data["sale_id"] = this.selected_object.id;
+          data["id"] = this.selected_object.id;
           this.editData(data);
         } else {
           this.addData(data);
@@ -149,16 +121,15 @@ export default {
       }
     },
     addData(data) {
-      this.$store.dispatch("importSystem/addSale", data);
-      this.$store.dispatch("importSystem/getSales", data);
-      // this.reset();
+      this.$store.dispatch("guarntee/addGuarntee", data);
+      this.$store.dispatch("guarntee/getGuarntees", data);
     },
     editData(data) {
-      this.$store.dispatch("importSystem/editSale", data);
+      this.$store.dispatch("guarntee/editGuarntee", data);
     },
     reset() {
       this.$refs.form.reset();
-      this.$store.state.importSystem.isEdit = false;
+      this.$store.state.guarntee.isEdit = false;
     },
   },
   created() {

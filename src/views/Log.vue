@@ -2,7 +2,7 @@
   <v-container>
     <v-card class="mt-5" elevation="4" shaped>
       <v-toolbar dark color="new">
-        <v-toolbar-title align-center>العاملات</v-toolbar-title>
+        <v-toolbar-title align-center>السجلات</v-toolbar-title>
       </v-toolbar>
 
       <v-card-text> <withdrawBox></withdrawBox> </v-card-text>

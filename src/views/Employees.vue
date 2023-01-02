@@ -2,7 +2,7 @@
   <v-container>
     <v-card class="mt-5" elevation="4" shaped>
       <v-toolbar dark color="new">
-        <v-toolbar-title align-center>الموضفين</v-toolbar-title>
+        <v-toolbar-title align-center>الموظفين</v-toolbar-title>
       </v-toolbar>
 
       <v-card-text> <addEmployeeForm></addEmployeeForm> </v-card-text>

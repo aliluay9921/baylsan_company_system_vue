@@ -37,7 +37,7 @@
 
     <!-- show activites -->
 
-    <template>
+    <!-- <template>
       <v-row justify="center">
         <v-dialog v-model="dialog1" persistent max-width="690">
           <v-card>
@@ -51,9 +51,7 @@
               :key="index"
               ><b> أسم العاملة:</b> {{ item.full_name }}
               <v-divider></v-divider>
-              
-              </v-card-text
-            >
+            </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -68,7 +66,7 @@
           </v-card>
         </v-dialog>
       </v-row>
-    </template>
+    </template> -->
 
     <v-data-table
       :headers="headers"
@@ -86,10 +84,17 @@
 
           <td class="text-start">{{ item.full_name }}</td>
           <td class="text-start">{{ item.passport_no }}</td>
+          <td class="text-start">{{ item.visa_number }}</td>
           <td class="text-start">{{ item.nationality }}</td>
           <td class="text-start">{{ item.age }}</td>
           <td class="text-start">{{ item.date_entry }}</td>
           <td class="text-start">{{ item.date_issuance_visa }}</td>
+          <td class="text-start" v-if="item.cashing == 0">
+            <v-chip color="error" outlined>لايوجد صرفيات </v-chip>
+          </td>
+          <td class="text-start" v-else>
+            {{ item.cashing }}
+          </td>
           <td
             class="text-start"
             style="display: flex; flex-diractions: row; padding: 5px"
@@ -97,13 +102,13 @@
             <v-btn dark color="error" @click="getItem(item, (type = 0))"
               >حذف</v-btn
             >
-            <v-btn
+            <!-- <v-btn
               dark
               color="darkblueshade"
               class="mr-2 ml-2"
               @click="getItem(item, (type = 1))"
               >النشاطات</v-btn
-            >
+            > -->
           </td>
         </tr>
       </template>
@@ -171,6 +176,12 @@ export default {
           class: "new white--text title ",
         },
         {
+          text: "رقم الفيزا",
+          value: "visa_number",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
           text: "الجنسية",
           value: "nationality",
           align: "start",
@@ -191,6 +202,12 @@ export default {
         {
           text: "تأريخ اصدار الفيزا ",
           value: "date_issuance_visa",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "الصرفيات",
+          value: "cashing",
           align: "start",
           class: "new white--text title ",
         },

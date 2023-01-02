@@ -1,7 +1,5 @@
 <template>
   <v-card class="elevation-1">
-    <!-- delete actions -->
-
     <v-data-table
       :headers="headers"
       :items="logs"
@@ -53,15 +51,18 @@
             </v-chip>
           </td>
           <td class="text-start">{{ item.value }}</td>
-          <td class="text-start">{{ item.note }}</td>
+          <td class="text-start" v-if="item.note == null">
+            <v-chip dark color="error"> لايوجد ملاحظات</v-chip>
+          </td>
+          <td class="text-start" v-else>{{ item.note }}</td>
           <td class="text-start">
-            <span>{{ moment(item.created_at).format("YYYY-MM-DD") }}</span>
+            <span>{{ moment(item.date).format("YYYY-MM-DD") }}</span>
           </td>
         </tr>
       </template>
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>جدول العاملات</v-toolbar-title>
+          <v-toolbar-title> السجلات</v-toolbar-title>
           <v-row style="margin-top: 15px">
             <v-col>
               <v-text-field
@@ -130,8 +131,6 @@ export default {
   data() {
     return {
       search: "",
-      item: {},
-
       headers: [
         {
           text: "التسلسل",
@@ -145,7 +144,7 @@ export default {
           class: "new white--text title ",
         },
         {
-          text: "الموظف",
+          text: "الهدف",
           value: "target_id",
           align: "start",
           class: "new white--text title ",
@@ -164,15 +163,13 @@ export default {
         },
         {
           text: "التأريخ ",
-          value: "created_at",
+          value: "date",
           align: "start",
           class: "new white--text title ",
         },
       ],
       pagination: {},
       items: [5, 10, 25, 50, 100],
-      dialog: false,
-      dialog1: false,
       menu: null,
       date: "",
     };
@@ -181,7 +178,6 @@ export default {
     logs() {
       return this.$store.state.actions.logs;
     },
-
     table_loading() {
       return this.$store.state.actions.table_loading;
     },
@@ -210,9 +206,8 @@ export default {
   },
   methods: {
     filter() {
-      var filter = { name: "created_at", value: this.date };
+      var filter = { name: "date", value: this.date };
       Object.assign(this.$store.state.actions.filter, filter);
-
       this.$store.dispatch("actions/getLogs");
       // this.getSalesCategories();
     },
@@ -232,28 +227,22 @@ export default {
       };
       // // console.log(this.query);
       this.log_params = par;
-      const current = new Date();
-      const moment = require("moment");
-      this.date = moment(current).format("YYYY-MM-DD");
-      var filter = { name: "created_at", value: this.date };
-      Object.assign(this.$store.state.actions.filter, filter);
+
       this.$store.dispatch("actions/getLogs");
     },
 
     searchDebounce() {
       clearTimeout(this._timerId);
-      // delay new call 1000ms
       this._timerId = setTimeout(() => {
         this.$store.dispatch("actions/resetFields");
         this.pagination.page = 1;
+
         this.getLogs();
       }, 1000);
     },
   },
   created() {
     this.$store.dispatch("actions/resetFields");
-
-    // this.getInvoicemnts();
   },
   watch: {
     pagination: {

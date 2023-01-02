@@ -35,11 +35,21 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="2">
             <v-text-field
               v-model="selected_object.age"
               placeholder="أدخل عمر العاملة"
               label="أدخل عمر العاملة"
+              hide-details="auto"
+              :rules="[rules.required]"
+              clearable
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="2">
+            <v-text-field
+              v-model="selected_object.visa_number"
+              placeholder="أدخل رقم الفيزا"
+              label="أدخل رقم الفيزا"
               hide-details="auto"
               :rules="[rules.required]"
               clearable
@@ -161,6 +171,7 @@ export default {
         data["passport_no"] = this.selected_object.passport_no;
         data["nationality"] = this.selected_object.nationality;
         data["age"] = this.selected_object.age;
+        data["visa_number"] = this.selected_object.visa_number;
         data["date_entry"] = this.selected_object.date_entry;
         data["date_issuance_visa"] = this.selected_object.date_issuance_visa;
 

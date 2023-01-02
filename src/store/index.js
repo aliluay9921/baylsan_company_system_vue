@@ -7,8 +7,9 @@ import employee from '../store/modules/employee'
 import worker from '../store/modules/worker'
 import importSystem from '../store/modules/importSystem'
 import actions from '../store/modules/actions'
+import guarntee from '../store/modules/guarntee'
 
-
+// baylasan_company_mangament
 
 
 
@@ -16,7 +17,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    // server: "http://138.68.113.224:8888",
+    // server: "http://64.225.111.42:8888",
     server: "http://127.0.0.1:8000",
     snackbar: false,
     textSnackbar: "",
@@ -105,6 +106,6 @@ export default new Vuex.Store({
 
   },
   modules: {
-    employee, worker, importSystem, actions
+    employee, worker, importSystem, actions, guarntee
   },
 });

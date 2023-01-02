@@ -35,7 +35,7 @@ const importSystem = {
             state.sale_state = "error";
         },
         add_sale_success(state, sale) {
-            state.sales.push(sale);
+            state.sales.unshift(sale);
             state.sale_state = "done";
             state.table_loading = false;
             console.log(sale);
@@ -62,7 +62,6 @@ const importSystem = {
     actions: {
         async resetFields({ state }) {
             state.sale_state = "done";
-            // state.sales = [];
             state.table_loading = false;
             state.params = {
                 dropdown: true,
@@ -146,39 +145,39 @@ const importSystem = {
             });
         },
 
-        // async editWorker({ commit, state, dispatch, rootState }, data) {
-        //     state.table_loading = true
-        //     return new Promise((resolve, reject) => {
-        //         commit("sales_request");
-        //         axios({
-        //             url: `${rootState.server}` + "/api/edit_worker",
-        //             data: data,
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //             },
-        //             method: "PUT",
-        //         }).then(resp => {
-        //             state.table_loading = false
-        //             commit("worker_edit_success", resp.data.result[0])
-        //             dispatch(
-        //                 "snackbarToggle",
-        //                 { toggle: true, text: resp.data.message },
-        //                 { root: true }
-        //             );
-        //             resolve(resp);
-        //         }).catch((err) => {
-        //             state.table_loading = false;
-        //             commit("sales_error");
-        //             dispatch(
-        //                 "snackbarToggle",
-        //                 { toggle: true, text: err.response.data.message },
-        //                 { root: true }
-        //             );
+        async editSale({ commit, state, dispatch, rootState }, data) {
+            state.table_loading = true
+            return new Promise((resolve, reject) => {
+                commit("sales_request");
+                axios({
+                    url: `${rootState.server}` + "/api/edit_sale",
+                    data: data,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    method: "PUT",
+                }).then(resp => {
+                    state.table_loading = false
+                    commit("sale_edit_success", resp.data.result[0])
+                    dispatch(
+                        "snackbarToggle",
+                        { toggle: true, text: resp.data.message },
+                        { root: true }
+                    );
+                    resolve(resp);
+                }).catch((err) => {
+                    state.table_loading = false;
+                    commit("sales_error");
+                    dispatch(
+                        "snackbarToggle",
+                        { toggle: true, text: err.response.data.message },
+                        { root: true }
+                    );
 
-        //             console.warn(err);
-        //         });
-        //     });
-        // },
+                    console.warn(err);
+                });
+            });
+        },
         async recoveryWorker({ commit, state, dispatch, rootState }, data) {
             state.table_loading = true
             return new Promise((resolve, reject) => {

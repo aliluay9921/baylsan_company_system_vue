@@ -68,7 +68,7 @@
       loading-text="جاري التحميل يرجى الأنتظار"
     >
       <template v-slot:item="{ item, index }">
-        <tr>
+        <tr @dblclick="selectedRaw(item)">
           <td>{{ index + 1 }}</td>
 
           <td class="text-start">{{ item.customer_name }}</td>
@@ -88,12 +88,17 @@
           <td class="text-start">{{ item.price }}</td>
           <td class="text-start">{{ item.remainder_price }}</td>
           <td class="text-start">{{ item.received_price }}</td>
+
           <td class="text-start">
             <v-chip color="success" outlined v-if="item.status == 0">
               تم البيع
             </v-chip>
             <v-chip color="error" outlined v-else> تم الاسترجاع </v-chip>
           </td>
+          <td class="text-start">
+            <span>{{ moment(item.created_at).format("YYYY-MM-DD") }}</span>
+          </td>
+          <td class="text-start">{{ item.note }}</td>
           <td class="text-start">
             <v-btn
               dark
@@ -200,6 +205,18 @@ export default {
           class: "new white--text title ",
         },
         {
+          text: "تأريخ البيع ",
+          value: "created_at",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "ملاحظات  ",
+          value: "note",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
           text: "الحذف",
           value: "action",
           align: "start",
@@ -244,6 +261,17 @@ export default {
     },
   },
   methods: {
+    selectedRaw(item) {
+      console.log(item);
+      this.$store.state.importSystem.selected_object = {};
+      Object.assign(this.$store.state.importSystem.selected_object, item);
+      this.$store.state.importSystem.isEdit = true;
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    },
     queryChange(val) {
       this.searchDebounce();
     },
