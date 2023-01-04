@@ -1,6 +1,7 @@
 <template>
   <v-card class="elevation-1">
     <v-data-table
+      id="print_me"
       :headers="headers"
       :items="logs"
       :options.sync="pagination"
@@ -24,7 +25,7 @@
           <td class="text-start" v-if="item.log_type == 1">
             <i
               style="color: red; font-size: 30px"
-              class="fa fa-check-square"
+              class="fa fa-window-close"
               aria-hidden="true"
             ></i>
           </td>
@@ -60,10 +61,21 @@
           </td>
         </tr>
       </template>
-      <template v-slot:top>
+      <template v-slot:top v-if="!isPrenting">
         <v-toolbar flat>
           <v-toolbar-title> السجلات</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+
           <v-row style="margin-top: 15px">
+            <v-col style="margin-right: 15px">
+              <v-btn
+                dark
+                color="error"
+                @click="hideHeaderTable"
+                v-print="printObj"
+                >طباعة</v-btn
+              >
+            </v-col>
             <v-col>
               <v-text-field
                 v-model="logQuery"
@@ -105,6 +117,15 @@
           </v-row>
         </v-toolbar>
       </template>
+      <template v-slot:footer v-if="isPrenting">
+        <div class="footer">
+          <p>
+            <b style="margin-right: 5px"> Ali Luay Khalaf</b>تم برمجة النظام
+            بواسطة
+          </p>
+          <p>009647713982401</p>
+        </div>
+      </template>
     </v-data-table>
     <div class="text-center pt-2 mt-3">
       <v-row>
@@ -131,6 +152,7 @@ export default {
   data() {
     return {
       search: "",
+      isPrenting: false,
       headers: [
         {
           text: "التسلسل",
@@ -172,6 +194,27 @@ export default {
       items: [5, 10, 25, 50, 100],
       menu: null,
       date: "",
+      printObj: {
+        id: "print_me",
+        popTitle: "شركة اليد البيضاء",
+        extraHead: '<meta http-equiv="Content-Language"content="en-ar"/>',
+        footer: `
+          <div class="footer">
+            This is a footer
+          </div>
+        `,
+
+        beforeOpenCallback(vue) {
+          vue.isPrenting = false;
+        },
+        openCallback(vue) {
+          vue.isPrenting = true;
+        },
+
+        closeCallback(vue) {
+          vue.isPrenting = false;
+        },
+      },
     };
   },
   computed: {
@@ -205,6 +248,11 @@ export default {
     },
   },
   methods: {
+    hideHeaderTable() {
+      this.isPrenting = true;
+
+      console.log((this.isPrenting = true));
+    },
     filter() {
       var filter = { name: "date", value: this.date };
       Object.assign(this.$store.state.actions.filter, filter);

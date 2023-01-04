@@ -7,8 +7,11 @@ import Axios from "axios";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import moment from 'moment'
+import Print from 'vue-print-nb'
+
 
 Vue.prototype.moment = moment
+Vue.use(Print);
 
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 library.add(faUserSecret)

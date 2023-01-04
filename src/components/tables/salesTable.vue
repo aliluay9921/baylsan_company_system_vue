@@ -58,7 +58,8 @@
     </template>
 
     <v-data-table
-      :headers="headers"
+      id="print_me"
+      :headers="isPrenting ? headers_print : headers"
       :items="sales"
       :options.sync="pagination"
       :loading="table_loading || false"
@@ -67,13 +68,20 @@
       hide-default-footer
       loading-text="جاري التحميل يرجى الأنتظار"
     >
-      <template v-slot:item="{ item, index }">
+      <template v-slot:item="{ item }">
         <tr @dblclick="selectedRaw(item)">
-          <td>{{ index + 1 }}</td>
+          <td class="text-center">{{ item.customer_name }}</td>
+          <td class="text-center">{{ item.worker.full_name }}</td>
 
-          <td class="text-start">{{ item.customer_name }}</td>
-          <td class="text-start">{{ item.worker.full_name }}</td>
-          <td class="text-start">
+          <td class="text-center">{{ item.price }}</td>
+          <td class="text-center">{{ item.remainder_price }}</td>
+          <td class="text-center">{{ item.received_price }}</td>
+
+          <td class="text-center">
+            <span>{{ moment(item.created_at).format("YYYY-MM-DD") }}</span>
+          </td>
+          <td class="text-center">{{ item.note }}</td>
+          <td class="text-center">
             <v-chip dark color="red" v-if="item.request_type == 0">يومي</v-chip>
             <v-chip dark color="green" v-if="item.request_type == 1"
               >اسبوعي</v-chip
@@ -85,21 +93,13 @@
               >سنوي</v-chip
             >
           </td>
-          <td class="text-start">{{ item.price }}</td>
-          <td class="text-start">{{ item.remainder_price }}</td>
-          <td class="text-start">{{ item.received_price }}</td>
-
-          <td class="text-start">
+          <td class="text-center">
             <v-chip color="success" outlined v-if="item.status == 0">
               تم البيع
             </v-chip>
             <v-chip color="error" outlined v-else> تم الاسترجاع </v-chip>
           </td>
-          <td class="text-start">
-            <span>{{ moment(item.created_at).format("YYYY-MM-DD") }}</span>
-          </td>
-          <td class="text-start">{{ item.note }}</td>
-          <td class="text-start">
+          <td class="text-end" v-if="!isPrenting">
             <v-btn
               dark
               color="error"
@@ -111,11 +111,14 @@
           </td>
         </tr>
       </template>
-      <template v-slot:top>
+
+      <template v-slot:top v-if="!isPrenting">
         <v-toolbar flat>
           <v-toolbar-title>جدول المبيعات</v-toolbar-title>
-
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-btn dark color="error" @click="hideHeaderTable" v-print="printObj"
+            >طباعة</v-btn
+          >
           <v-spacer></v-spacer>
           <v-text-field
             v-model="salesQuery"
@@ -128,8 +131,18 @@
           ></v-text-field>
         </v-toolbar>
       </template>
+      <template v-slot:footer v-if="isPrenting">
+        <div class="footer">
+          <p>
+            <b style="margin-right: 5px"> Ali Luay Khalaf</b>تم برمجة النظام
+            بواسطة
+          </p>
+          <p>009647713982401</p>
+        </div>
+      </template>
     </v-data-table>
-    <div class="text-center pt-2 mt-3">
+
+    <div class="text-center pt-2 mt-3" v-if="!isPrenting">
       <v-row>
         <v-col align-self="center" cols="2" offset="2">
           <v-select
@@ -147,6 +160,9 @@
         </v-col>
       </v-row>
     </div>
+
+    <!--       v-print="'#printMe'"
+ -->
   </v-card>
 </template>
 <script>
@@ -155,28 +171,16 @@ export default {
     return {
       search: "",
       item: {},
-
-      headers: [
+      headers_print: [
         {
-          text: "التسلسل",
-          align: "sequence",
-          class: "new white--text title",
-        },
-        {
-          text: "أسم الزبون",
+          text: " الزبون",
           value: "customer_name",
           align: "start",
           class: "new white--text title ",
         },
         {
-          text: "أسم العاملة",
+          text: " العاملة ",
           value: "worker_id",
-          align: "start",
-          class: "new white--text title ",
-        },
-        {
-          text: "نوع الطلب",
-          value: "request_type",
           align: "start",
           class: "new white--text title ",
         },
@@ -199,8 +203,58 @@ export default {
           class: "new white--text title ",
         },
         {
+          text: "تأريخ البيع ",
+          value: "created_at",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "ملاحظات  ",
+          value: "note",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "نوع الطلب",
+          value: "request_type",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
           text: "الحالة ",
           value: "status",
+          align: "start",
+          class: "new white--text title ",
+        },
+      ],
+      headers: [
+        {
+          text: " الزبون",
+          value: "customer_name",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: " العاملة ",
+          value: "worker_id",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "ألسعر",
+          value: "price",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "القيمة المستلمة",
+          value: "remainder_price",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "القيمة المتبقية",
+          value: "received_price",
           align: "start",
           class: "new white--text title ",
         },
@@ -217,6 +271,18 @@ export default {
           class: "new white--text title ",
         },
         {
+          text: "نوع الطلب",
+          value: "request_type",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
+          text: "الحالة ",
+          value: "status",
+          align: "start",
+          class: "new white--text title ",
+        },
+        {
           text: "الحذف",
           value: "action",
           align: "start",
@@ -228,6 +294,28 @@ export default {
       pagination: {},
       items: [5, 10, 25, 50, 100],
       dialog: false,
+      isPrenting: false,
+      printObj: {
+        id: "print_me",
+        popTitle: "شركة اليد البيضاء",
+        extraHead: '<meta http-equiv="Content-Language"content="en-ar"/>',
+        footer: `
+          <div class="footer">
+            This is a footer
+          </div>
+        `,
+
+        beforeOpenCallback(vue) {
+          vue.isPrenting = false;
+        },
+        openCallback(vue) {
+          vue.isPrenting = true;
+        },
+
+        closeCallback(vue) {
+          vue.isPrenting = false;
+        },
+      },
     };
   },
   computed: {
@@ -261,6 +349,11 @@ export default {
     },
   },
   methods: {
+    hideHeaderTable() {
+      this.isPrenting = true;
+
+      console.log((this.isPrenting = true));
+    },
     selectedRaw(item) {
       console.log(item);
       this.$store.state.importSystem.selected_object = {};
@@ -334,5 +427,13 @@ export default {
 /* هاي تخلي الهدر مرتب كلة */
 .v-data-table-header th {
   white-space: nowrap;
+}
+.footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+.footer p {
+  font-size: 12px;
 }
 </style>

@@ -19,6 +19,7 @@ export default new Vuex.Store({
   state: {
     // server: "http://64.225.111.42:8888",
     server: "http://127.0.0.1:8000",
+    statistics: [],
     snackbar: false,
     textSnackbar: "",
     isLoggedIn: false,
@@ -44,6 +45,7 @@ export default new Vuex.Store({
       state.status = "error";
     },
     get_statistics(state, data) {
+      console.log(data)
       state.statistics.push(data);
     },
     logout(state) {
@@ -103,6 +105,22 @@ export default new Vuex.Store({
         resolve();
       });
     },
+    getStatistics({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `${state.server}` + "/api/get_statistics",
+          method: "GET",
+        })
+          .then((resp) => {
+            commit("get_statistics", resp.data.result);
+            resolve(resp);
+          })
+          .catch((err) => {
+
+            reject(err);
+          });
+      });
+    }
 
   },
   modules: {

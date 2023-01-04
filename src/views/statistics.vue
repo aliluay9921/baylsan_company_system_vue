@@ -3,66 +3,100 @@
     <div id="root">
       <div class="container pt-5">
         <div class="row align-items-stretch">
-          <div class="c-dashboardInfo col-lg-3 col-md-6">
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
             <div class="wrap">
               <h4
                 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
               >
-                عدد الطلاب
+                العاملات التي تم بيعها
               </h4>
-              <span class="hind-font caption-12 c-dashboardInfo__count"
-                >25</span
-              >
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.buys_workers
+              }}</span>
               <div class="icon">
-                <i class="fa fa-address-book" aria-hidden="true"></i>
+                <i class="fa fa-user-times" aria-hidden="true"></i>
               </div>
             </div>
           </div>
-          <div class="c-dashboardInfo col-lg-3 col-md-6">
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
             <div class="wrap">
               <h4
                 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
               >
-                المدرسين
+                العاملات المتوفرات
               </h4>
-              <span class="hind-font caption-12 c-dashboardInfo__count"
-                >30</span
-              >
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.worker_available
+              }}</span>
               <!-- <i class="fas fa-chalkboard-teacher"></i> -->
 
               <div class="icon">
-                <i class="fa fa-address-book" aria-hidden="true"></i>
+                <i class="fa fa-users" aria-hidden="true"></i>
               </div>
             </div>
           </div>
-          <div class="c-dashboardInfo col-lg-3 col-md-6">
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
             <div class="wrap">
               <h4
                 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
               >
-                الصفوف
+                مبيعات اليوم
               </h4>
-              <span class="hind-font caption-12 c-dashboardInfo__count"
-                >32</span
-              >
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.sales_day
+              }}</span>
               <!-- <font-awesome-icon icon="fa-solid fa-screen-users" /> -->
               <div class="icon">
-                <i class="fa fa-address-book" aria-hidden="true"></i>
+                <i class="fa fa-balance-scale" aria-hidden="true"></i>
               </div>
             </div>
           </div>
-          <div class="c-dashboardInfo col-lg-3 col-md-6">
+        </div>
+        <div class="row align-items-stretch">
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
             <div class="wrap">
               <h4
                 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
               >
-                المواد
+                صرفيات اليوم
               </h4>
-              <span class="hind-font caption-12 c-dashboardInfo__count"
-                >20</span
-              >
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.withdraw_day
+              }}</span>
               <div class="icon">
-                <i class="fa fa-address-book" aria-hidden="true"></i>
+                <i class="fa fa-window-minimize" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
+            <div class="wrap">
+              <h4
+                class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
+              >
+                صرفيات الشهر
+              </h4>
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.withdraw_month
+              }}</span>
+              <!-- <i class="fas fa-chalkboard-teacher"></i> -->
+
+              <div class="icon">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+          <div class="c-dashboardInfo col-lg-4 col-md-6">
+            <div class="wrap">
+              <h4
+                class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title"
+              >
+                مبيعات الشهر
+              </h4>
+              <span class="hind-font caption-12 c-dashboardInfo__count">{{
+                data.sales_month
+              }}</span>
+              <div class="icon">
+                <i class="fa fa-calculator" aria-hidden="true"></i>
               </div>
             </div>
           </div>
@@ -79,30 +113,43 @@ export default {
   name: "Home",
   data() {
     return {
-      pending_orders: "",
-      deliverd_orders: "",
-      users: "",
-      products: "",
+      data: {
+        worker_available: 0,
+        buys_workers: 0,
+        sales_day: 0,
+        sales_month: 0,
+        withdraw_day: 0,
+        withdraw_month: 0,
+      },
     };
   },
   computed: {
-    // statistics() {
-    //   return this.$store.state.statistics;
-    // },
+    statistics() {
+      return this.$store.state.statistics;
+    },
   },
   methods: {
-    // getStatistics() {
-    //   this.$store.dispatch("getStatistics");
-    // },
+    getStatistics() {
+      this.$store.dispatch("getStatistics");
+    },
   },
   created() {
     this.getStatistics();
   },
-  mounted() {
-    // this.pending_orders = this.statistics[0].pending_orders;
-    // this.deliverd_orders = this.statistics[0].deliverd_orders;
-    // this.users = this.statistics[0].users;
-    // this.products = this.statistics[0].products;
+
+  watch: {
+    statistics: function () {
+      this.statistics.forEach((element) => {
+        this.data["buys_workers"] = element.buys_workers;
+        this.data["worker_available"] = element.worker_available;
+        this.data["sales_day"] = element.sales_day;
+        this.data["sales_month"] = element.sales_month;
+        this.data["withdraw_month"] = element.withdraw_month;
+        this.data["withdraw_day"] = element.withdraw_day;
+      });
+
+      console.log(this.data);
+    },
   },
 };
 </script>
@@ -145,13 +192,13 @@ export default {
 }
 
 .c-dashboardInfo:nth-child(1) .wrap:after {
-  background: linear-gradient(82.59deg, #00c48c 0%, #00a173 100%);
+  background: linear-gradient(82.59deg, #00c48c 0%, #7b0db6 100%);
 }
 .c-dashboardInfo:nth-child(2) .wrap:after {
   background: linear-gradient(81.67deg, #0084f4 0%, #1a4da2 100%);
 }
 .c-dashboardInfo:nth-child(3) .wrap:after {
-  background: linear-gradient(69.83deg, #0084f4 0%, #00c48c 100%);
+  background: linear-gradient(69.83deg, #e20780 0%, #550303 100%);
 }
 .c-dashboardInfo:nth-child(4) .wrap:after {
   background: linear-gradient(81.67deg, #ff647c 0%, #1f5dc5 100%);

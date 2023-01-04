@@ -69,8 +69,7 @@
         ></v-card>
       </v-col>
       <v-col cols="12" sm="4">
-        <!-- <v-card elevation="8" outlined shaped to="/statistics"> -->
-        <v-card elevation="8" outlined shaped to="">
+        <v-card elevation="8" outlined shaped to="/statistics">
           <v-card-title class="text-h5">
             <div class="icon">
               <i class="fa fa-percent" aria-hidden="true"></i>
