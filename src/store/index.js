@@ -10,9 +10,6 @@ import actions from '../store/modules/actions'
 import guarntee from '../store/modules/guarntee'
 
 // baylasan_company_mangament
-
-
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -116,12 +113,10 @@ export default new Vuex.Store({
             resolve(resp);
           })
           .catch((err) => {
-
             reject(err);
           });
       });
     }
-
   },
   modules: {
     employee, worker, importSystem, actions, guarntee

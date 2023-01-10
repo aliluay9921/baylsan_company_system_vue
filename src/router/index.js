@@ -84,23 +84,23 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requireNotLogin)) {
-    if (store.getters.isLoggedIn) {
-      next("/");
-    } else {
-      next();
-    }
-  } else if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next();
-      return;
-    }
-    next("/login");
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requireNotLogin)) {
+//     if (store.getters.isLoggedIn) {
+//       next("/");
+//     } else {
+//       next();
+//     }
+//   } else if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (store.getters.isLoggedIn) {
+//       next();
+//       return;
+//     }
+//     next("/login");
+//   } else {
+//     next();
+//   }
+// });
 
 
 export default router;
