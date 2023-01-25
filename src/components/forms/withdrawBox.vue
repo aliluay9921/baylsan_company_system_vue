@@ -33,6 +33,7 @@
               item-value="id"
               label=" اختر الموظف"
             ></v-autocomplete>
+
             <v-autocomplete
               v-if="type == 1"
               clearable
@@ -41,7 +42,25 @@
               item-text="full_name"
               item-value="id"
               label=" اختر عاملة"
-            ></v-autocomplete>
+              ref="workerDropdown"
+              :loading="loading"
+              :menu-props="menu_props"
+              :search-input.sync="workerQuery"
+              :value="workerQuery"
+            >
+              <template v-slot:append-item>
+                <div
+                  v-if="!($store.state.worker.worker_state == 'finished')"
+                  v-intersect="workerInteract"
+                  class="text-xs-center"
+                ></div>
+              </template>
+              <template slot="no-data">
+                <v-layout justify-start align-content-center class="pa-2">
+                  جاري التحميل يرجى الأنتظار
+                </v-layout>
+              </template>
+            </v-autocomplete>
           </v-col>
         </v-row>
         <v-row>
@@ -116,21 +135,79 @@ export default {
       worker_id: "",
       menu: null,
       date: "",
+      menu_props: {
+        closeOnClick: false,
+        closeOnContentClick: false,
+        disableKeys: true,
+        openOnClick: false,
+        maxHeight: 150,
+        offsetY: true,
+        offsetOverflow: true,
+        transition: false,
+      },
     };
   },
   computed: {
+    loading() {
+      return this.$store.state.worker.table_loading;
+    },
     employees() {
       return this.$store.state.employee.employees;
     },
     workers() {
       return this.$store.state.worker.workers;
     },
+    workerQuery: {
+      get() {
+        return this.$store.state.worker.workerQuery;
+      },
+      set(value) {
+        this.$store.state.worker.workerQuery = value;
+      },
+    },
   },
   methods: {
     getEmployees() {
       this.$store.dispatch("employee/getEmployees");
     },
+    updateWorkerSearch(value) {
+      clearTimeout(this._timerId);
+      // delay new call 1000ms
+      this._timerId = setTimeout(() => {
+        if (this.workerQuery == null) {
+          return;
+        }
+        this.$store.dispatch("worker/resetFields");
+        this.$store.state.worker.params.page = 1;
+        // console.log(this.$store.state.worker.params);
+
+        if (
+          this.workerQuery.length == 0 ||
+          (this.workerQuery.length == 1 && this.workerQuery == " ")
+        )
+          this.workerQuery = value.replace(/\s/g, "");
+        // هاي تلغي ال space
+        else {
+          this.$store.state.worker.workerQuery = value;
+          // console.log(value);
+          // console.log(this.$store.state.worker.workerQuery);
+        }
+        this.$store.dispatch("worker/resetFields");
+        this.getWorkers();
+      }, 1000);
+    },
+    workerInteract(entries, observer, isIntersecting) {
+      if (isIntersecting) {
+        setTimeout(() => {
+          this.getWorkers(); // onscroll
+          // console.log("on scroll");
+          this.$refs.workerDropdown.onScroll();
+        }, 500);
+      }
+    },
     getWorkers() {
+      if (this.$store.state.worker.worker_state == "finished") return;
+
       this.$store.dispatch("worker/getWorkers");
     },
     validateField() {
@@ -160,6 +237,12 @@ export default {
   created() {
     this.getEmployees();
     this.getWorkers();
+  },
+  watch: {
+    workerQuery: function () {
+      this.$store.dispatch("worker/resetFields");
+      this.updateWorkerSearch(this.workerQuery);
+    },
   },
 };
 </script>

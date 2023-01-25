@@ -14,8 +14,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    // server: "http://64.225.111.42:8888",
-    server: "http://127.0.0.1:8000",
+    server: "http://64.225.111.42:8888",
+    // server: "http://127.0.0.1:8000",
     statistics: [],
     snackbar: false,
     textSnackbar: "",

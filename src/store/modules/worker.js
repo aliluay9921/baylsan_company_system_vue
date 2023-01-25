@@ -12,13 +12,36 @@ const worker = {
         selected_object: {},
         isEdit: false,
         pageCount: 1,
+        // params: {
+        //     page: 1,
+        //     itemsPerPage: 10,
+        // },
         params: {
+            dropdown: true,
+            sortBy: [],
+            sortDesc: [],
             page: 1,
-            itemsPerPage: 10,
+            itemsPerPage: 3,
         },
     }),
     getters: {},
     mutations: {
+
+        worker_dropdown_success(state, workers) {
+
+            state.table_loading = false;
+            if (workers.length == 0) {
+                state.worker_state = "finished";
+                if (state.params.page > 1)
+                    state.params.page = state.params.page - 1;
+                return;
+            }
+            state.params.page = state.params.page + 1;
+            workers.forEach((worker) => {
+                state.workers.push(worker);
+            });
+            state.worker_state = "done";
+        },
         workers_success(state, workers) {
             state.workers.splice(0, state.workers.length)
             workers.forEach(element => {
@@ -64,10 +87,17 @@ const worker = {
             // state.workers = [];
             state.worker_actions = [];
             state.table_loading = false;
+            // state.params = {
+            //     dropdown: true,
+            //     page: 1,
+            //     itemsPerPage: 10,
+            // };
             state.params = {
                 dropdown: true,
+                sortBy: [],
+                sortDesc: [],
                 page: 1,
-                itemsPerPage: 10,
+                itemsPerPage: 3,
             };
         },
         async getWorkers({ commit, state, dispatch, rootState }) {
@@ -94,8 +124,15 @@ const worker = {
 
                     state.table_loading = false;
                     state.pageCount = resp.data.count;
-                    commit('workers_success', resp.data.result)
-                    dispatch("snackbarToggle", { toggle: true, text: resp.data.message }, { root: true });
+
+                    if (data.dropdown == false) {
+                        commit('workers_success', resp.data.result)
+                        dispatch("snackbarToggle", { toggle: true, text: resp.data.message }, { root: true });
+                    } else {
+                        commit("worker_dropdown_success", resp.data.result);
+                    }
+
+
                     resolve(resp);
                 }).catch((err) => {
                     state.table_loading = false;
